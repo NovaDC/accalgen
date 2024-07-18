@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'acfont';
-    src: url('/ac-offical.otf') format('opentype');
+    src: url('./ac-offical.otf') format('opentype');
     /* font-weight: 800; */
     /* font-style: normal; */
 }

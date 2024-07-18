@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Dosis:wght@800&display=swap');
-@import url("/acfont.css");
+@import url("./acfont.css");
 
 div:not(.villager-entry) body{
     margin:0; 
@@ -32,7 +32,7 @@ body{
 html {
     width: 100%;
     height: 100%;
-    background-image: url("/back.svg");
+    background-image: url("./back.svg");
     background-repeat: repeat;
     background-size: 7.5%;
 }
@@ -105,8 +105,6 @@ div.villager-icon{
 }
 
 #waiter{
-    /* TODO used only for debug */
-    display: none;
     position: absolute; 
     z-index:1000;
     width:100%; 
