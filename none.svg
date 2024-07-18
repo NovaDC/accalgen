@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100"
+   height="100"
+   viewBox="0 0 26.458333 26.458333"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <style>
+  @import url("/acfont.css");
+  @font-face {
+    font-family: 'acfont';
+    src: url('/ac-offical.otf') format('opentype');
+    /* font-weight: 800; */
+    /* font-style: normal; */
+}</style>
+  <defs
+     id="defs1" />
+  <g
+     id="layer1">
+    <circle
+       style="fill:#777777;fill-opacity:1;stroke-width:1.56588;paint-order:stroke fill markers"
+       id="path1"
+       cy="9.260416"
+       cx="13.229166"
+       r="6.614583" />
+    <ellipse
+       style="fill:#777777;fill-opacity:1;stroke-width:1.67627;paint-order:stroke fill markers"
+       id="path1-1"
+       cy="27.119791"
+       cx="13.229166"
+       rx="13.229166"
+       ry="9.4624767" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, ';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:4.75626;fill:#000000;fill-opacity:1;stroke-width:1.576;paint-order:stroke fill markers"
+       x="12.075616"
+       y="8.4004288"
+       id="text1"
+       transform="matrix(3.0295858,0,0,2.8088656,-25.761757,-11.29255)"><tspan
+         x="12.075616"
+         y="8.4004288"
+         id="tspan3"><tspan
+           style="font-family:'acfont', 'Dosis', 'Hind', sans-serif;-inkscape-font-specification:'\'acfont\', \'Dosis\', \'Hind\', sans-serif'"
+           id="tspan2">?</tspan></tspan></text>
+  </g>
+</svg>

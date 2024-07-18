@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ACCGEN</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Free Web tutorials"><!--TODO--->
+    <meta name="keywords" content="HTML, CSS, JavaScript"> <!--TODO--->
+    <meta name="author" content="NovaDC"> <!--TODO--->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--TODO--->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" type="text/javascript"></script>
+    <script type="module" src="./main.js"></script>
+    <script>
+        function getfirstSpecificVillager(vdata, name){
+            const ls = getSpecificVillagerObjs(vdata, name)
+            return ls.length > 0 ? ls[0] : null
+        }
+        
+        var vdata = null
+        async function onInit(){
+            vdata = await fetchVillagers()
+            console.log(vdata)
+            onLangChange()
+            onlocchange()
+            onreocchange()
+            onCountChange()
+            onsettingsclicked()
+            $("#waiter").toggleClass("hide")
+        }
+
+        function getCurrentLang() {
+            return $("select#lang").val()
+        }
+
+        function onLangChange(){
+            var seleted = $("datalist#names")
+            seleted.children().remove()
+            console.log(getCurrentLang())
+            if (vdata) 
+                for (vobj of vdata)
+                    if (vobj) seleted.append(`<option id=${getVillagerName(vobj, "id")}>${getVillagerName(vobj, getCurrentLang())}</option>`)
+        }
+
+        var vcounter = 0
+        function addvillager(){
+            $("#villager-list").append($("template#villager-entry").html().replace("v{X}", `v${vcounter}`))
+            vcounter += 1
+        }
+
+        function onvillagermodify(ele){
+            if (!vdata) return
+            
+            const vdiv = $(ele).parents("div.villager-entry")
+            const vobj = getfirstSpecificVillager(vdata, $(ele).val())
+            
+            if (! vobj) return
+            
+            vdiv.data("vobj", vobj)
+
+            const bday = getVillagerBirthday(vobj)
+            if (bday) $(vdiv).find("input.villager-bday").val(bday.toJSDate().toISOString().substring(0,10))
+
+            const link = getVillagerURL(vobj)
+            if (link){
+                $(vdiv).find("a.acurl").attr("href", link)
+                $(vdiv).find("a.acurl").show()
+            }
+            else $(vdiv).find("a.acurl").hide()
+
+            const ico = getVillagerIcon(vobj)
+            if (ico){
+                $(vdiv).find("img.villager-icon").attr("src", ico)
+                $(vdiv).find("img.villager-icon").show()
+            }
+            else $(vdiv).find("img.villager-icon").hide()
+
+            const nc = getVillagerNameColor(vobj)
+            if (nc) $(vdiv).css("color", nc)
+
+            const bc = getVillagerBubbleColor(vobj)
+            console.log(bc)
+            if (bc) $(vdiv).css("background-color", bc)
+        }
+
+        function onvillagerremove(ele){
+            $(ele).parents("div.villager-entry").remove()
+        }
+
+        function makecal(){
+            if (!vdata) return
+            
+            var vs = []
+            for (j of $('#villager-list > .villager-entry input.villager-entry-name')) vs.push($(j).val())
+
+            var bdays = []
+            for (v of vs) if (v) bdays.push(makeBirthday(vdata, v, getCurrentLang(), $("#reoc").val(), defaultyear, $("#reoc").val(), defaultcategories,  $("#reoc-count").val(), $("#reoc-end").val()))
+        
+            const c = makeCal(bdays)
+            console.log(c.toString())
+            saveCal(c)
+        }
+
+        function onlocchange(e = null){
+            if (e && !e.value) e.value = defaultlocation
+        }
+
+        function onreocchange(){
+            $('#reoc-settings').toggleClass("hide", !$('#reoc').is(':checked'))
+            console.log($("#reoc-end").val())
+        }
+
+        function onCountChange(e = null){
+            if (e && e.value && e.value <= 0) e.value = 1
+        }
+
+        function onsettingsclicked(){
+            $('#settings').toggleClass("hide")
+        }
+    </script>
+    <style>
+        .hide{
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<datalist id = "names">
+    <option id="">villager formal name</option>
+</datalist>
+
+<template id="villager-entry">
+    <div id="v{X}" class="villager-entry", style="background-color: white">
+        <div class = "villager-icon"><img class = "villager-icon" src = "/none.svg" alt="?"></div>
+
+        <div class = "text-column">
+            <label class="villager-entry-name-label">
+                Name:  <a class="acurl" href="https://www.google.com" style="display:none">(View on wiki)</a> <input class="villager-entry-name" list="names" onchange="onvillagermodify(this)" oninput="onvillagermodify(this)" onemptied="onvillagermodify(this)" onsubmit="onvillagermodify(this)"/>
+            </label>
+            <br>
+            <label class="villager-bday-label">Birthdate:  <input class = "villager-bday" type="date" readonly="true", oninput="console.log(this)"></label>
+        </div>
+        <button class="remove-button" onclick="onvillagerremove(this)" title="Remove">X</button>
+    </div>
+</template>
+
+<body onload="onInit()">
+
+    <div id="waiter">
+        <h1 id="waiter-text">Please Wait...</h1>
+    </div>
+
+    <div id="options">
+        <div id="settings">
+            <label for="lang">Choose language</label>
+            <select id="lang" class="lang-select" name="lang" onload="onLangChange()" onchange="onLangChange()">
+                <option value="uSen">English (NA)</option>
+                <option value="uSfr">French (NA)</option>
+                <option value="uSes">Spanish (NA)</option>
+                <option value="eUen">English (EU)</option>
+                <option value="eUfr">French (EU)</option>
+                <option value="eUes">Spanish (EU)</option>
+                <option value="eUde">German (EU)</option>
+                <option value="eUit">Italian (EU)</option>
+                <option value="eUnl">Dutch (EU)</option>
+                <option value="eUru">Russian (EU)</option>
+                <option value="jPja">Japan (JP)</option>
+                <option value="kRko">Korean (KR)</option>
+                <option value="cNzh">Chinese (CN)</option>
+                <option value="tWzh">Chinese (TW)</option>
+                <option value="id">Internal Game ID</option>
+            </select>
+            <label class="custom-location-label">
+                Choose Location:
+                <input id="loc" class="custom-location" onsubmit="onlocchange(this)" onchange="onlocchange(this)"/>
+            </label>
+            <label class="reoc-label">
+                Reocurring Events:
+                <input type="checkbox" id="reoc" class="reoc" onchange="onreocchange()"/>
+            </label>
+            <div id="reoc-settings" class="reoc-settings">
+                <label>
+                    Number of times:
+                    <input type="number" id="reoc-count" class="reoc-count" onchange="onCountChange(this)">
+                </label>
+                
+                <label>
+                    End on date:
+                    <input type="date" id="reoc-end" class="reoc-end">
+                </label>
+            </div>
+        </div>
+        <button id="add" class="add-button" onclick="addvillager()"> (+) Add villager</button>
+        <button id="generate" class="generate-button" onclick="makecal()">Generate!</button>
+        <button id="settings-button" class="settings-button" onclick="onsettingsclicked()"><img src="" alt="Settings"></button>
+    </div>
+
+    <div id="villager-list">
+
+    </div>
+
+    <div id="footer">
+        This webpage is a fan project and claims not rights to Animal Crossing or any art asset used.
+        <br>
+        Animal Crossign and all related designs and names are copyright belongin to Nintendo.
+        <br>
+        <a href="https://animalcrossing.nintendo.com">Visit the offical animal crossign website</a> to find out where to get yourself the latest game.
+        <br>
+        <iframe width="110" height="200" src="https://www.myinstants.com/instant/metal-pipe-clang-80894/embed/" frameborder="0" scrolling="no"></iframe></div>
+
+</body>
+
+</html>
+
+<svg width="0" height="0">
+	<clipPath id="bubbleclip" clipPathUnits="objectBoundingBox">
+		<path d="m 0.07422255,0.10159143 c -0.11368267,0.15651366 -0.0485147,0.44820305 -0.0310481,0.57056598 -0.0263709,0.31140546 0.0502413,0.30958736 0.0912627,0.31698116 0.40196465,0.03884 0.46901162,0.004092 0.73394838,-0.008699 0.14650807,-0.0573843 0.0769347,-0.276703 0.0884401,-0.33509669 C 1.0062781,0.39661084 1.0013482,0.23892702 0.95023957,0.11704122 0.89913113,-0.00484332 0.18790522,-0.05492221 0.07422255,0.10159143 Z"></path>
+	</clipPath>
+</svg>
